@@ -35,12 +35,38 @@ const getSingleTask = async (req, res) => {
     }
 };
 
-const updateTask = (req, res) => {
-    res.send("ある特定のタスクを更新しました");
+const updateTask = async (req, res) => {
+    try {
+        const updateTask = await Task.findOneAndUpdate(
+            { _id: req.params.id }, 
+            req.body,
+            { 
+                new: true,
+            }
+        );
+
+        if(!updateTask){
+            return res.status(404).json(`_id:${req.params.id}は存在しません`);
+        }
+
+        res.status(200).json(updateTask);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
-const deleteTask = (req, res) => {
-    res.send("ある特定のタスクを削除しました");
+const deleteTask = async (req, res) => {
+    try {
+        const deleteTask = await Task.findOneAndDelete({ _id: req.params.id });
+
+        if(!deleteTask){
+            return res.status(404).json(`_id:${req.params.id}は存在しません`);
+        }
+
+        res.status(200).json(deleteTask);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
 module.exports = {

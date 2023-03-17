@@ -3,8 +3,13 @@ const { connect } = require("mongoose");
 const connectDB = require("../db/connect");
 const Task = require("../models/task")
 
-const getAllTasks = (req, res) => {
-    res.send("タスクをすべて取得しました");
+const getAllTasks = async (req, res) => {
+    try {
+        const allTask = await Task.find({});
+        res.status(200).json(allTask);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
 const createTask = async (req, res) => {
@@ -16,8 +21,18 @@ const createTask = async (req, res) => {
     }
 };
 
-const getSingleTask = (req, res) => {
-    res.send("ある特定のタスクを取得しました");
+const getSingleTask = async (req, res) => {
+    try {
+        const getSingleTask = await Task.findOne({ _id: req.params.id });
+
+        if(!getSingleTask){
+            return res.status(404).json(`_id:${req.params.id}は存在しません`);
+        }
+
+        res.status(200).json(getSingleTask);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
 const updateTask = (req, res) => {

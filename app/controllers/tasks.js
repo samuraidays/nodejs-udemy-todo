@@ -1,9 +1,19 @@
+const { request } = require("express");
+const { connect } = require("mongoose");
+const connectDB = require("../db/connect");
+const Task = require("../models/task")
+
 const getAllTasks = (req, res) => {
     res.send("タスクをすべて取得しました");
 };
 
-const createTask = (req, res) => {
-    res.send("タスクを作成しました");
+const createTask = async (req, res) => {
+    try {
+        const createTask = await Task.create(req.body);
+        res.status(200).json(createTask);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 };
 
 const getSingleTask = (req, res) => {
